@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_CITY_NAME_LENGTH 50
+
+struct Wetterdaten {
+    char stadt[MAX_CITY_NAME_LENGTH];
+    float temperatur;           // Temperatur in Celsius
+    float windgeschwindigkeit;  // Windgeschwindigkeit in Metern pro Sekunde
+    float niederschlag;         // Niederschlag in Millimetern
+    float luftdruck;            // Luftdruck in hPa (Hektopascal)
+};
+
+int main() {
+    // Definiere ein Array von Strukturen Wetterdaten, um Wetterdaten für 10 Städte zu speichern
+    struct Wetterdaten deutscheStaedte[10] = {
+        {"Berlin", 20.5, 5.7, 0.0, 1012.3},
+        {"Hamburg", 18.2, 4.9, 1.2, 1010.5},
+        {"Muenchen", 22.8, 6.3, 0.0, 1015.0},
+        {"Koeln", 19.6, 4.2, 0.8, 1011.8},
+        {"Frankfurt", 21.4, 5.1, 0.0, 1013.2},
+        {"Stuttgart", 23.0, 5.9, 0.0, 1014.7},
+        {"Duesseldorf", 19.8, 4.5, 0.4, 1011.5},
+        {"Dortmund", 18.5, 4.0, 0.6, 1012.0},
+        {"Essen", 19.2, 4.3, 0.3, 1011.2},
+        {"Bremen", 17.9, 4.7, 1.5, 1009.8}
+    };
+
+    int eingabeVersuche = 0;
+    int eingabeIndex;
+    char eingabeStadt[MAX_CITY_NAME_LENGTH];
+
+    printf("Willkommen bei unserer Wettervorhersage-App! Wir bringen Sie immer ins Schwitzen.\n");
+
+    while (eingabeVersuche < 3) {
+        printf("Waehlen Sie eine Stadt aus der folgenden Liste aus (1-10):\n");
+        printf("1. Berlin\n2. Hamburg\n3. Muenchen\n4. Koeln\n5. Frankfurt\n");
+        printf("6. Stuttgart\n7. Duesseldorf\n8. Dortmund\n9. Essen\n10. Bremen\n");
+
+        printf("Geben Sie entweder den Namen der Stadt oder die dazugehoerige Zahl ein: ");
+        fgets(eingabeStadt, MAX_CITY_NAME_LENGTH, stdin);
+        eingabeStadt[strcspn(eingabeStadt, "\n")] = '\0';  // Entferne das Zeilenumbruchzeichen von fgets
+
+        // Versuche, die Eingabe in eine Zahl zu konvertieren
+        eingabeIndex = atoi(eingabeStadt);
+
+        // Überprüfe, ob die Eingabe eine gültige Zahl ist, wenn nicht, versuche die Eingabe als Stadtnamen zu interpretieren
+        if (eingabeIndex >= 1 && eingabeIndex <= 10) {
+            printf("Wetterdaten fuer %s:\n", deutscheStaedte[eingabeIndex - 1].stadt);
+            printf("Temperatur: %.1f Celsius\n", deutscheStaedte[eingabeIndex - 1].temperatur);
+            printf("Windgeschwindigkeit: %.1f m/s\n", deutscheStaedte[eingabeIndex - 1].windgeschwindigkeit);
+            printf("Niederschlag: %.1f mm\n", deutscheStaedte[eingabeIndex - 1].niederschlag);
+            printf("Luftdruck: %.1f hPa\n", deutscheStaedte[eingabeIndex - 1].luftdruck);
+            break;  // Beende die Schleife, da eine gültige Eingabe erfolgt ist
+        } else {
+            int i;
+            // Überprüfe, ob die Eingabe ein gültiger Stadtnamen ist
+            for (i = 0; i < 10; ++i) {
+                if (strcmp(eingabeStadt, deutscheStaedte[i].stadt) == 0) {
+                    printf("Wetterdaten fuer %s:\n", deutscheStaedte[i].stadt);
+                    printf("Temperatur: %.1f Celsius\n", deutscheStaedte[i].temperatur);
+                    printf("Windgeschwindigkeit: %.1f m/s\n", deutscheStaedte[i].windgeschwindigkeit);
+                    printf("Niederschlag: %.1f mm\n", deutscheStaedte[i].niederschlag);
+                    printf("Luftdruck: %.1f hPa\n", deutscheStaedte[i].luftdruck);
+                    break;  // Beende die Schleife, da eine gültige Eingabe erfolgt ist
+                }
+            }
+            // Überprüfe, ob die Schleife durchlaufen wurde, ohne eine gültige Eingabe zu finden
+            if (i == 10) {
+                printf("Ungueltige Eingabe. Bitte geben Sie entweder den Namen der Stadt oder die dazugehoerige Zahl ein.\n");
+                ++eingabeVersuche;
+            }
+        }
+    }
+
+    // Wenn der Benutzer nach drei Versuchen immer noch keine gültige Eingabe gemacht hat
+    if (eingabeVersuche == 3) {
+        printf("Sie haben drei fehlerhafte Eingaben gemacht. Vielleicht sollten Sie besser nach drinnen gehen. Auf Wiedersehen!\n");
+    } else {
+        printf("Vielen Dank, dass Sie unsere Wettervorhersage-App verwendet haben. Auf Wiedersehen!\n");
+    }
+
+    return 0;
+}
